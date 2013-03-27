@@ -22,8 +22,8 @@
 		if(meta.stack){
 			console.log(meta.name + ": stack");
 			console.log(meta.stack);
+			console.log(meta.name + ": end of stack");
 		}
-		console.log(meta.name + ": end of stack");
 		if(custom){
 			console.log(meta.name + ": custom - ", custom);
 		}
