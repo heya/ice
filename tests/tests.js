@@ -30,25 +30,25 @@
 				open({meta: open({name: "assert"}), condition: "3 < 1"})
 			]
 		},
-		function test_asynch_no_timeout(t){
+		function test_async_no_timeout(t){
 			var f1 = t.startAsync("async1"), f2;
 			setTimeout(function(){
 				f2 = t.startAsync("async2");
 			}, 20);
 			setTimeout(function(){
 				eval(t.assert("f1.onTime()"));
-				eval(t.assert("1 < 2"));
+				eval(t.test("1 < 2"));
 				f1.done();
 			}, 40);
 			setTimeout(function(){
 				eval(t.assert("f2"));
 				eval(t.assert("f2.onTime()"));
-				eval(t.assert("1 < 2"));
+				eval(t.test("1 < 2"));
 				f2.done();
 			}, 60);
 		},
 		{
-			test: function test_asynch_with_timeout(t){
+			test: function test_async_with_timeout(t){
 				var f1 = t.startAsync("async1"), f2;
 				setTimeout(function(){
 					f2 = t.startAsync("async2");
