@@ -3,8 +3,6 @@
 		define(["./main"], factory);
 	}else if(typeof module != "undefined"){ // node.js
 		module.exports = factory(require("./main"));
-	}else{
-		loggerAssert = factory(logger);
 	}
 })(function(logger){
 	"use strict";

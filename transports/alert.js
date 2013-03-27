@@ -3,8 +3,6 @@
 		define([], factory);
 	}else if(typeof module != "undefined"){ // node.js
 		module.exports = factory();
-	}else{
-		loggerTransportsAlert = factory();
 	}
 })(function(){
 	"use strict";
