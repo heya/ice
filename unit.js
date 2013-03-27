@@ -32,6 +32,7 @@
 	// our custom logger to show test messages
 
 	var output = logger.getLogger();
+	output.filter = 0;
 	output.transports = [{
 		log: shortTransport
 	}];
@@ -39,6 +40,7 @@
 	// our custom tester/logger
 
 	var tester = logger.getLogger();
+	tester.filter = 0;
 	tester.transports = [
 		{
 			filter: [0, 200],
@@ -50,6 +52,13 @@
 		},
 		{
 			log: raw.log
+		},
+		{
+			log: function(logger, meta, text, condition, custom){
+				if(!tester.expectedLogs && meta.level >= 200){ // test, assert, error
+					stats.failure = true;
+				}
+			}
 		},
 		{
 			filter: 300,
@@ -132,7 +141,10 @@
 	};
 
 	tester.done = function(){
-		tester.flyingTests = {};
+		if(tester.timeout){
+			clearTimeout(tester.timeout);
+			tester.timeout = null;
+		}
 		if(tester.expectedLogs){
 			if(!stats.failure){
 				if(!unify(raw.getQueue(), tester.expectedLogs)){
@@ -143,6 +155,7 @@
 			tester.expectedLogs = null;
 			raw.clearQueue();
 		}
+		tester.flyingTests = {};
 		if(stats.failure){
 			++stats.failedTests;
 		}
@@ -165,7 +178,6 @@
 			clearTimeout(tester.timeout);
 			tester.timeout = null;
 			if(tester.inFlight){
-				// we have unfinished asynchronous tasks
 				var test = batches[tester.batchIndex].tests[tester.testIndex],
 					testName = (typeof test == "function" ? test.name : test.name || test.test.name) ||
 						"anonymous";
@@ -177,21 +189,22 @@
 						testName:   testName,
 						asyncNames: tester.flyingTests
 					});
-				if(tester.expectedLogs){
-					if(!stats.failure){
-						if(!unify(raw.getQueue(), tester.expectedLogs)){
-							output.error("Unexpected log sequence " + tester.getTestName());
-						}
-					}
-					tester.expectedLogs = null;
-					raw.clearQueue();
-				}else{
-					if(!stats.failure){
-						// report an error, if we didn't report it before
-						++stats.failedTests;
+				stats.failure = !tester.expectedLogs;
+			}
+			tester.inFlight = 0;
+			tester.flyingTests = {};
+			if(tester.expectedLogs){
+				if(!stats.failure){
+					if(!unify(raw.getQueue(), tester.expectedLogs)){
+						output.error("Unexpected log sequence " + tester.getTestName());
+						stats.failure = true;
 					}
 				}
-				tester.flyingTests = {};
+				tester.expectedLogs = null;
+				raw.clearQueue();
+			}
+			if(stats.failure){
+				++stats.failedTests;
 			}
 			++tester.testIndex;
 			run();
@@ -206,6 +219,10 @@
 		}
 		if(typeof process != "undefined"){
 			process.exit(stats.failedTests ? 1 : 0);
+		}else if(typeof window != "undefined" && window){
+			if(typeof window.callPhantom != "undefined"){
+				window.callPhantom(stats.failedTests ? "failure" : "success");
+			}
 		}
 	}
 
@@ -262,22 +279,21 @@
 			if(tester.inFlight){
 				waitForAsync(timeout);
 				return false;
-			}else{
-				if(tester.expectedLogs){
-					if(!stats.failure){
-						if(!unify(raw.getQueue(), tester.expectedLogs)){
-							output.error("Unexpected log sequence " + tester.getTestName());
-							stats.failure = true;
-						}
-					}
-					tester.expectedLogs = null;
-					raw.clearQueue();
-				}
-				if(stats.failure){
-					++stats.failedTests;
-				}
-				tester.flyingTests = {};
 			}
+			if(tester.expectedLogs){
+				if(!stats.failure){
+					if(!unify(raw.getQueue(), tester.expectedLogs)){
+						output.error("Unexpected log sequence " + tester.getTestName());
+						stats.failure = true;
+					}
+				}
+				tester.expectedLogs = null;
+				raw.clearQueue();
+			}
+			if(stats.failure){
+				++stats.failedTests;
+			}
+			tester.flyingTests = {};
 		}
 		// advance the loop
 		++tester.testIndex;
@@ -312,14 +328,14 @@
 			log: consoleTransport
 		},
 		{
+			log: raw.log
+		},
+		{
 			log: function(logger, meta, text, condition, custom){
-				if(meta.level >= 200){ // test, assert, error
+				if(!tester.expectedLogs && meta.level >= 200){ // test, assert, error
 					stats.failure = true;
 				}
 			}
-		},
-		{
-			log: raw.log
 		},
 		{
 			filter: 300,
