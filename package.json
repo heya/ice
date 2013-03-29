@@ -1,6 +1,6 @@
 {
   "name": "heya-logger",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Logging, debugging, and assert facility.",
   "main": "main.js",
   "directories": {
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/heya/log.git"
+    "url": "git://github.com/heya/logger.git"
   },
   "keywords": [
     "logging",
