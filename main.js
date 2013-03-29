@@ -1,24 +1,16 @@
 (function(factory){
 	if(typeof define != "undefined"){ // AMD
-		define(["./transports/short", "./transports/console",
+		define(["module", "./transports/short", "./transports/console",
 			"./transports/exception"], factory);
 	}else if(typeof module != "undefined"){ // node.js
-		module.exports = factory(require("./transports/short"),
+		module.exports = factory(module, require("./transports/short"),
 			require("./transports/console"), require("./transports/exception"));
 	}
-})(function(shortTransport, consoleTransport, exceptionTransport){
+})(function(module, shortTransport, consoleTransport, exceptionTransport){
 	"use strict";
 
-	var defaultLoggerSettings = {
-			levels: {
-				info:   0,
-				warn:   100,
-				//test:   200,	// defined separately in test.js
-				//assert: 300,	// defined separately in assert.js
-				error:  400
-			},
-			filter: 0,
-			transports: [
+	var transports = {
+			"default": [
 				{
 					filter: [0, 200],
 					log:    shortTransport
@@ -32,36 +24,53 @@
 					log:    exceptionTransport
 				}
 			]
+		},
+		levels = {
+			info:     0,
+			warn:   100,
+			test:   200,
+			assert: 300,
+			error:  400
+		},
+		defaultLoggerSettings = {
+			filter:    0,
+			name:      "logger",
+			transport: "default"
 		};
 
 	function Logger(meta, logger){
-		logger = logger || defaultLoggerSettings;
-		// initialization
-		this.meta = {};
-		this.filter = logger.filter;
-		this.transports = logger.transports.slice(0);
-		this._addCond = logger._addCond;
-		// fill the meta
+		logger         = logger || defaultLoggerSettings;
+		this.filter    = logger.filter || 0;
+		this.selfName  = logger.selfName || "logger";
+		this.transport = logger.transport || "default";
+		this.meta      = {};
 		if(meta){
 			if(meta.id)      { this.meta.id = meta.mid || meta.id || ""; }
 			if(meta.filename){ this.meta.filename = meta.filename || meta.uri || meta.url || ""; }
-		}
-		// set levels
-		this.levels = {};
-		var levels = logger.levels;
-		for(var level in levels){
-			if(levels.hasOwnProperty(level)){
-				this.addLevel(levels[level], level, logger[level]);
-			}
 		}
 	}
 
 	Logger.prototype = {
 		declaredClass: "logger/Logger",
+		Logger: Logger,
+		// static methods
+		getTransports: function getLoggers(){
+			return transports;
+		},
+		getNamedTransports: function getLoggerTransports(name){
+			return transports[name] || transports["default"];
+		},
+		setNamedTransports: function setLoggerTransports(name, newTransports){
+			if(newTransports){
+				transports[name] = newTransports;
+			}else{
+				delete transports[name];
+			}
+		},
 		// main internal function, which actually logs data
 		_log: function _log(name, text, condition, custom, excp){
 			// check the level
-			var level = this.levels[name];
+			var level = levels[name];
 			if(typeof this.filter == "number" && level < this.filter ||
 					this.filter && this.filter instanceof Array &&
 						(this.filter[0] > level || level >= this.filter[1]) ||
@@ -82,8 +91,9 @@
 				}
 			}
 			// go over transports
-			for(var i = 0; i < this.transports.length; ++i){
-				var t = this.transports[i];
+			var transports = this.getNamedTransports(this.transport);
+			for(var i = 0; i < transports.length; ++i){
+				var t = transports[i];
 				// check the level
 				if(typeof t.filter == "number" && level < t.filter ||
 						t.filter && t.filter instanceof Array &&
@@ -98,26 +108,64 @@
 			}
 		},
 		// user-level methods
-		addLevel: function addLevel(level, name, method){
-			this.levels[name] = level;
-			this[name] = method || function(text, custom){
-				var t, e;
-				if(text && text instanceof Error){
-					t = text.message;
-					e = text;
-				}else{
-					t = text;
-					e = new Error("LOG");
-				}
-				this._log(name, t || "", null, custom || null, e);
-			};
-		},
 		getLogger: function getLogger(meta){
 			return new Logger(meta, this);
 		}
 	};
 
+	function addLevel(Logger, level, name){
+		Logger.prototype[name] = function(text, custom){
+			var t, e;
+			if(text && text instanceof Error){
+				t = text.message;
+				e = text;
+			}else{
+				t = text;
+				e = new Error("LOG");
+			}
+			this._log(name, t || "", null, custom || null, e);
+		};
+	}
+
+	// add standard levels
+	addLevel(Logger,   0, "info");
+	addLevel(Logger, 100, "warn");
+	addLevel(Logger, 400, "error");
+
 	// default logger
 
-	return new Logger({id: "*default*"}, defaultLoggerSettings);
+	var logger = new Logger({id: "*default*"}, defaultLoggerSettings);
+
+	// process configuration options, if available
+
+	var availableTransports = {
+			"short": shortTransport,
+			"console": consoleTransport,
+			"exception": exceptionTransport
+		};
+
+	if(typeof module.config == "function"){
+		var config = module.config();
+		if(config){
+			if(typeof config.filter == "number" || config.filter){
+				logger.filter = config.filter;
+			}
+			if(config.transports){
+				for(var k in config.transports){
+					if(config.transports.hasOwnProperty(k)){
+						var t = config.transports[k], y = [];
+						for(var i = 0; i < t.length; ++i){
+							var x = t[i];
+							if(x.log && availableTransports.hasOwnProperty(x.log)){
+								y.push({filter: x.filter, log: availableTransports[x.log]});
+							}
+						}
+						logger.setNamedTransports(k, y);
+					}
+				}
+			}
+		}
+	}
+
+	return logger;
 });

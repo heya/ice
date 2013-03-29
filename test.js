@@ -7,7 +7,7 @@
 })(function(logger){
 	"use strict";
 
-	logger._addCond(logger, 200, "test");
+	logger._addCond(logger.Logger, 200, "test");
 
 	return logger;
 });

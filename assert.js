@@ -11,11 +11,11 @@
 		return text.replace(/['"\\]/g, "\\$&");
 	}
 
-	function addConditional(logger, level, name, defaultName){
-		logger.addLevel(level, name, function assert(condition, text, custom){
+	logger.Logger.prototype._addCond = function addConditional(Logger, level, name){
+		Logger.prototype[name] = function assert(condition, text, custom){
 			if(typeof condition == "string" && (arguments.length < 2 || typeof text == "string")){
 				// condition should be evaluated
-				return "if(!(" + condition + ")){ " + (text || defaultName || "logger") + "._log('" + name +
+				return "if(!(" + condition + ")){ " + (text || this.selfName || "logger") + "._log('" + name +
 					"', null, '" + quoteString(condition) + "', null, new Error('LOG')); }";
 			}
 			// condition was literal
@@ -25,11 +25,10 @@
 				return this._log(name, text, null, custom || null, new Error("LOG"));
 			}
 			return this._log(name, null, null, text || custom || null, new Error("LOG"));
-		});
-	}
+		};
+	};
 
-	addConditional(logger, 300, "assert");
-	logger._addCond = addConditional;
+	logger._addCond(logger.Logger, 300, "assert");
 
 	return logger;
 });

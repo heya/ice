@@ -8,7 +8,7 @@
 	"use strict";
 
 	var logger = logger.getLogger(module);
-	logger.transports = [{log: alertTransport}];
+	logger.setNamedTransports("default", [{log: alertTransport}]);
 
 	// local tests
 
