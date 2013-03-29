@@ -1,17 +1,15 @@
 {
   "name": "heya-logger",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Logging, debugging, and assert facility.",
   "main": "main.js",
   "directories": {
     "test": "tests"
   },
-  "dependencies": {
-    "heya-unify": ">=0.1"
-  },
+  "dependencies": {},
   "devDependencies": {},
   "scripts": {
-    "test": "node tests/tests.js"
+    "test": "node tests/test_short.js"
   },
   "repository": {
     "type": "git",
