@@ -8,11 +8,11 @@ If you plan to use it in your [node.js](http://nodejs.org) project install it
 like this:
 
 ```
-npm install heya-log
+npm install heya-logger
 ```
 
 For your browser-based projects I suggest to use [volo.js](http://volojs.org):
 
 ```
-volo install heya/log heya-log
+volo install heya/logger heya-logger
 ```
