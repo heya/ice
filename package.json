@@ -1,7 +1,7 @@
 {
-  "name": "heya-logger",
-  "version": "0.1.4",
-  "description": "Logging, debugging, and assert facility.",
+  "name": "heya-ice",
+  "version": "0.1.0",
+  "description": "ICE: logging, debugging, and assert facility.",
   "main": "main.js",
   "directories": {
     "test": "tests"
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/heya/logger.git"
+    "url": "git://github.com/heya/ice.git"
   },
   "keywords": [
     "logging",

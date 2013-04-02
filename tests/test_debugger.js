@@ -1,14 +1,14 @@
 (function(factory){
 	if(typeof define != "undefined"){ // AMD
-		require(["module", "../test", "../transports/debugger"], factory);
+		require(["module", "../test", "../sinks/debugger"], factory);
 	}else if(typeof module != "undefined"){ // node.js
-		factory(module, require("../test"), require("../transports/debugger"));
+		factory(module, require("../test"), require("../sinks/debugger"));
 	}
-})(function(module, logger, debuggerTransport){
+})(function(module, logger, debuggerSink){
 	"use strict";
 
 	var logger = logger.getLogger(module);
-	logger.setNamedTransports("default", [{log: debuggerTransport}]);
+	logger.setNamedTransports("default", [{log: debuggerSink}]);
 
 	// local tests
 

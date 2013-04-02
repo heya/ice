@@ -1,27 +1,27 @@
 (function(factory){
 	if(typeof define != "undefined"){ // AMD
-		define(["module", "./transports/short", "./transports/console",
-			"./transports/exception"], factory);
+		define(["module", "./sinks/short", "./sinks/console",
+			"./sinks/exception"], factory);
 	}else if(typeof module != "undefined"){ // node.js
-		module.exports = factory(module, require("./transports/short"),
-			require("./transports/console"), require("./transports/exception"));
+		module.exports = factory(module, require("./sinks/short"),
+			require("./sinks/console"), require("./sinks/exception"));
 	}
-})(function(module, shortTransport, consoleTransport, exceptionTransport){
+})(function(module, shortSink, consoleSink, exceptionSink){
 	"use strict";
 
 	var transports = {
 			"default": [
 				{
 					filter: [0, 200],
-					log:    shortTransport
+					log:    shortSink
 				},
 				{
 					filter: 200,
-					log:    consoleTransport
+					log:    consoleSink
 				},
 				{
 					filter: 300,
-					log:    exceptionTransport
+					log:    exceptionSink
 				}
 			]
 		},
@@ -54,13 +54,13 @@
 		declaredClass: "logger/Logger",
 		Logger: Logger,
 		// static methods
-		getTransports: function getLoggers(){
+		getTransports: function getTransports(){
 			return transports;
 		},
-		getNamedTransports: function getLoggerTransports(name){
+		getNamedTransports: function getNamedTransports(name){
 			return transports[name] || transports["default"];
 		},
-		setNamedTransports: function setLoggerTransports(name, newTransports){
+		setNamedTransports: function setNamedTransports(name, newTransports){
 			if(newTransports){
 				transports[name] = newTransports;
 			}else{
@@ -138,10 +138,10 @@
 
 	// process configuration options, if available
 
-	var availableTransports = {
-			"short": shortTransport,
-			"console": consoleTransport,
-			"exception": exceptionTransport
+	var availableSinks = {
+			"short": shortSink,
+			"console": consoleSink,
+			"exception": exceptionSink
 		};
 
 	if(typeof module.config == "function"){
@@ -156,8 +156,8 @@
 						var t = config.transports[k], y = [];
 						for(var i = 0; i < t.length; ++i){
 							var x = t[i];
-							if(x.log && availableTransports.hasOwnProperty(x.log)){
-								y.push({filter: x.filter, log: availableTransports[x.log]});
+							if(x.log && availableSinks.hasOwnProperty(x.log)){
+								y.push({filter: x.filter, log: availableSinks[x.log]});
 							}
 						}
 						logger.setNamedTransports(k, y);

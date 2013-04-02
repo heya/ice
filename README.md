@@ -1,6 +1,6 @@
-# Logger [![Build Status](https://travis-ci.org/heya/logger.png?branch=master)](https://travis-ci.org/heya/logger)
+# ICE [![Build Status](https://travis-ci.org/heya/ice.png?branch=master)](https://travis-ci.org/heya/ice)
 
-Logging, debugging, and assert facility.
+ICE: logging, debugging, and assert facility.
 
 ## How to install
 
@@ -8,11 +8,11 @@ If you plan to use it in your [node.js](http://nodejs.org) project install it
 like this:
 
 ```
-npm install heya-logger
+npm install heya-ice
 ```
 
 For your browser-based projects I suggest to use [volo.js](http://volojs.org):
 
 ```
-volo install heya/logger heya-logger
+volo install heya/ice heya-ice
 ```

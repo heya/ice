@@ -7,7 +7,7 @@
 })(function(){
 	"use strict";
 
-	return function debuggerTransport(logger, meta, text, condition, custom){
+	return function debuggerSink(logger, meta, text, condition, custom){
 		var flag = false;
 		debugger;
 		// set flag to true to stop logging and return back to the logging site

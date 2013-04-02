@@ -7,7 +7,7 @@
 })(function(){
 	"use strict";
 
-	return function(limit){
+	return function rawSink(limit){
 		var queue = [];
 		return {
 			limit: limit,
