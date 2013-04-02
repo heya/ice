@@ -1,6 +1,10 @@
-# ICE [![Build Status](https://travis-ci.org/heya/ice.png?branch=master)](https://travis-ci.org/heya/ice)
+# ICE
 
 ICE: logging, debugging, and assert facility.
+
+This project is being tested as a part of [heya-unit](https://github.com/heya/unit):
+
+[![Build Status](https://travis-ci.org/heya/unit.png?branch=master)](https://travis-ci.org/heya/unit)
 
 ## How to install
 
