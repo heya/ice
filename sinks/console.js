@@ -7,7 +7,7 @@
 })(function(){
 	"use strict";
 
-	return function consoleSink(logger, meta, text, condition, custom){
+	return function consoleSink(ice, meta, text, condition, custom){
 		console.log(meta.name + ": " + meta.level + " on " +
 			meta.time.toUTCString() + " in " + meta.filename +
 			(meta.filename !== meta.id ? " as " + meta.id : ""));

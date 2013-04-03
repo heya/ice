@@ -7,9 +7,9 @@
 })(function(){
 	"use strict";
 
-	return function exceptionSink(logger, meta, text, condition, custom){
+	return function exceptionSink(ice, meta, text, condition, custom){
 		var error = new Error(meta.name.toUpperCase() + ": " + (text || condition || "anonymous"));
-		error.logger = logger;
+		error.ice = ice;
 		error.meta   = meta;
 		error.text   = text;
 		error.condition = condition;

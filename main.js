@@ -28,15 +28,15 @@ function(module, shortSink, consoleSink, exceptionSink){
 		},
 		defaultLoggerSettings = {
 			filter:    0,
-			name:      "logger",
+			name:      "ice",
 			transport: "default"
 		};
 
-	function Logger(meta, logger){
-		logger         = logger || defaultLoggerSettings;
-		this.filter    = logger.filter || 0;
-		this.selfName  = logger.selfName || "logger";
-		this.transport = logger.transport || "default";
+	function Ice(meta, ice){
+		ice         = ice || defaultLoggerSettings;
+		this.filter    = ice.filter || 0;
+		this.selfName  = ice.selfName || "ice";
+		this.transport = ice.transport || "default";
 		this.meta      = {};
 		if(meta){
 			if(meta.id)      { this.meta.id = meta.mid || meta.id || ""; }
@@ -44,9 +44,9 @@ function(module, shortSink, consoleSink, exceptionSink){
 		}
 	}
 
-	Logger.prototype = {
-		declaredClass: "logger/Logger",
-		Logger: Logger,
+	Ice.prototype = {
+		declaredClass: "ice/Ice",
+		Ice: Ice,
 		// static methods
 		getTransports: function getTransports(){
 			return transports;
@@ -102,13 +102,13 @@ function(module, shortSink, consoleSink, exceptionSink){
 			}
 		},
 		// user-level methods
-		getLogger: function getLogger(meta){
-			return new Logger(meta, this);
+		specialize: function specialize(meta){
+			return new Ice(meta, this);
 		}
 	};
 
-	function addLevel(Logger, level, name){
-		Logger.prototype[name] = function(text, custom){
+	function addLevel(Ice, level, name){
+		Ice.prototype[name] = function(text, custom){
 			var t, e;
 			if(text && text instanceof Error){
 				t = text.message;
@@ -122,13 +122,13 @@ function(module, shortSink, consoleSink, exceptionSink){
 	}
 
 	// add standard levels
-	addLevel(Logger,   0, "info");
-	addLevel(Logger, 100, "warn");
-	addLevel(Logger, 400, "error");
+	addLevel(Ice,   0, "info");
+	addLevel(Ice, 100, "warn");
+	addLevel(Ice, 400, "error");
 
-	// default logger
+	// default ice
 
-	var logger = new Logger({id: "*default*"}, defaultLoggerSettings);
+	var ice = new Ice({id: "*default*"}, defaultLoggerSettings);
 
 	// process configuration options, if available
 
@@ -142,7 +142,7 @@ function(module, shortSink, consoleSink, exceptionSink){
 		var config = module.config();
 		if(config){
 			if(typeof config.filter == "number" || config.filter){
-				logger.filter = config.filter;
+				ice.filter = config.filter;
 			}
 			if(config.transports){
 				for(var k in config.transports){
@@ -154,12 +154,12 @@ function(module, shortSink, consoleSink, exceptionSink){
 								y.push({filter: x.filter, log: availableSinks[x.log]});
 							}
 						}
-						logger.setNamedTransports(k, y);
+						ice.setNamedTransports(k, y);
 					}
 				}
 			}
 		}
 	}
 
-	return logger;
+	return ice;
 });

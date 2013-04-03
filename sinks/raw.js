@@ -17,11 +17,11 @@
 			clearQueue: function(){
 				queue.length && queue.splice(0, queue.length);
 			},
-			log: function rawTransport(logger, meta, text, condition, custom){
+			log: function rawTransport(ice, meta, text, condition, custom){
 				while(queue.length >= limit){
 					queue.shift();
 				}
-				queue.push({logger: logger, meta: meta, text: text, condition: condition, custom: custom});
+				queue.push({ice: ice, meta: meta, text: text, condition: condition, custom: custom});
 			}
 		};
 	};
