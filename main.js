@@ -1,12 +1,6 @@
-(function(factory){
-	if(typeof define != "undefined"){ // AMD
-		define(["module", "./sinks/short", "./sinks/console",
-			"./sinks/exception"], factory);
-	}else if(typeof module != "undefined"){ // node.js
-		module.exports = factory(module, require("./sinks/short"),
-			require("./sinks/console"), require("./sinks/exception"));
-	}
-})(function(module, shortSink, consoleSink, exceptionSink){
+/* UMD.define */ (typeof define=="function"&&define||function(d,f,m){m={module:module,require:require};module.exports=f.apply(null,d.map(function(n){return m[n]||require(n)}))})
+(["module", "./sinks/short", "./sinks/console", "./sinks/exception"],
+function(module, shortSink, consoleSink, exceptionSink){
 	"use strict";
 
 	var transports = {

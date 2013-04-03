@@ -1,10 +1,5 @@
-(function(factory){
-	if(typeof define != "undefined"){ // AMD
-		define(["module", "../main"], factory);
-	}else if(typeof module != "undefined"){ // node.js
-		module.exports = factory(module, require("../main"));
-	}
-})(function(module, logger){
+/* UMD.define */ (typeof define=="function"&&define||function(d,f,m){m={module:module,require:require};module.exports=f.apply(null,d.map(function(n){return m[n]||require(n)}))})
+(["module", "../main"], function(module, logger){
 	"use strict";
 
 	var logger = logger.getLogger(module);

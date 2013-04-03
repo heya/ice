@@ -1,10 +1,6 @@
-(function(factory){
-	if(typeof define != "undefined"){ // AMD
-		require(["module", "../test", "./simulator", "../sinks/short"], factory);
-	}else if(typeof module != "undefined"){ // node.js
-		factory(module, require("../test"), require("./simulator"), require("../sinks/short"));
-	}
-})(function(module, logger, simulator, shortSink){
+/* UMD.define */ (typeof define=="function"&&define||function(d,f,m){m={module:module,require:require};module.exports=f.apply(null,d.map(function(n){return m[n]||require(n)}))})
+(["module", "../test", "./simulator", "../sinks/short"],
+function(module, logger, simulator, shortSink){
 	"use strict";
 
 	var logger = logger.getLogger(module);
