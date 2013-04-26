@@ -26,14 +26,14 @@ function(module, shortSink, consoleSink, exceptionSink){
 			assert: 300,
 			error:  400
 		},
-		defaultLoggerSettings = {
+		defaultIceSettings = {
 			filter:    0,
 			name:      "ice",
 			transport: "default"
 		};
 
 	function Ice(meta, ice){
-		ice         = ice || defaultLoggerSettings;
+		ice = ice || defaultIceSettings;
 		this.filter    = ice.filter || 0;
 		this.selfName  = ice.selfName || "ice";
 		this.transport = ice.transport || "default";
@@ -128,7 +128,7 @@ function(module, shortSink, consoleSink, exceptionSink){
 
 	// default ice
 
-	var ice = new Ice({id: "*default*"}, defaultLoggerSettings);
+	var ice = new Ice({id: "*default*"}, defaultIceSettings);
 
 	// process configuration options, if available
 
