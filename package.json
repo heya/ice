@@ -1,6 +1,6 @@
 {
   "name": "heya-ice",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "ICE: logging, debugging, and assert facility.",
   "main": "main.js",
   "directories": {
@@ -9,7 +9,7 @@
   "dependencies": {},
   "devDependencies": {},
   "scripts": {
-    "test": "node tests/test_short.js"
+    "test": "node tests/test_sink_short.js"
   },
   "repository": {
     "type": "git",
