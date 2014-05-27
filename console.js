@@ -1,5 +1,5 @@
 /* UMD.define */ (typeof define=="function"&&define||function(d,f,m){m={module:module,require:require};module.exports=f.apply(null,d.map(function(n){return m[n]||require(n)}))})
-(["./main"], function(ice){
+(["./ice"], function(ice){
 	"use strict";
 
 	function format(args){
