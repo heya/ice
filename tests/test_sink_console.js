@@ -32,4 +32,7 @@
 	}catch(e){
 		ice.info(e);
 	}
+
+	var a = 2, b = {x: 1};
+	eval(ice.TEST("a < b.x"));
 });

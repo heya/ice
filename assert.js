@@ -6,6 +6,21 @@
 		return text.replace(/['"\\]/g, "\\$&");
 	}
 
+	function showVariables(code, selfName){
+		// borrowed from heya-ctr / lambda.js / crackLambda()
+		var vars = code.
+					replace(/(?:\b[A-Z]|\.[a-zA-Z_$])[a-zA-Z_$\d]*|[a-zA-Z_$][a-zA-Z_$\d]*:|this|true|false|null|undefined|typeof|instanceof|in|delete|new|void|arguments|decodeURI|decodeURIComponent|encodeURI|encodeURIComponent|escape|eval|isFinite|isNaN|parseFloat|parseInt|unescape|window|document|'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"/g, "").
+					match(/([a-z_$][a-z_$\d]*)/gi) || [];
+		var result = [];
+		for(var i = 0, n = vars.length; i < n; ++i){
+			var name = vars[i];
+			if(name != selfName){
+				result.push("'" + vars[i] + "':" + vars[i]);
+			}
+		}
+		return "{" + result.join(",") + "}";
+	}
+
 	ice.Ice.prototype._addCond = function addConditional(Ice, level, name){
 		// function version
 		Ice.prototype[name] = function assert(condition, text, custom){
@@ -19,7 +34,8 @@
 		// eval version
 		Ice.prototype[name.toUpperCase()] = function assert(condition, text){
 			return "if(!(" + condition + ")){ " + (text || this.selfName || "ice") + "._log('" + name +
-				"', null, '" + quoteString(condition) + "', null, new Error('LOG')); }";
+				"', null, '" + quoteString(condition) + "', " +
+				showVariables(condition, text || this.selfName || "ice") + ", new Error('LOG')); }";
 		};
 	};
 

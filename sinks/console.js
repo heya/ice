@@ -17,13 +17,13 @@
 		if(condition){
 			console.log(meta.name + ": cond - " + condition);
 		}
+		if(custom){
+			console.log(meta.name + ": custom - ", custom);
+		}
 		if(meta.stack){
 			console.log(meta.name + ": stack");
 			console.log(meta.stack);
 			console.log(meta.name + ": end of stack");
-		}
-		if(custom){
-			console.log(meta.name + ": custom - ", custom);
 		}
 	};
 });
