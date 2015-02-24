@@ -11,11 +11,12 @@
 		var vars = code.
 					replace(/(?:\b[A-Z]|\.[a-zA-Z_$])[a-zA-Z_$\d]*|[a-zA-Z_$][a-zA-Z_$\d]*:|this|true|false|null|undefined|typeof|instanceof|in|delete|new|void|arguments|decodeURI|decodeURIComponent|encodeURI|encodeURIComponent|escape|eval|isFinite|isNaN|parseFloat|parseInt|unescape|window|document|'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"/g, "").
 					match(/([a-z_$][a-z_$\d]*)/gi) || [];
-		var result = [];
+		var result = [], resultSet = {};
 		for(var i = 0, n = vars.length; i < n; ++i){
-			var name = vars[i];
-			if(name != selfName){
+			var name = vars[i], key = "-" + name;
+			if(name != selfName && !resultSet[key]){
 				result.push("'" + vars[i] + "':" + vars[i]);
+				resultSet[key] = 1;
 			}
 		}
 		return "{" + result.join(",") + "}";
