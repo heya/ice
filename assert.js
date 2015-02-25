@@ -9,7 +9,7 @@
 	function showVariables(code, selfName){
 		// borrowed from heya-ctr / lambda.js / crackLambda()
 		var vars = code.
-					replace(/(?:\b[A-Z]|\.[a-zA-Z_$])[a-zA-Z_$\d]*|[a-zA-Z_$][a-zA-Z_$\d]*:|this|true|false|null|undefined|typeof|instanceof|in|delete|new|void|arguments|decodeURI|decodeURIComponent|encodeURI|encodeURIComponent|escape|eval|isFinite|isNaN|parseFloat|parseInt|unescape|window|document|'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"/g, "").
+					replace(/(?:\b[A-Z]|\.[a-zA-Z_$])[a-zA-Z_$\d]*|[a-zA-Z_$][a-zA-Z_$\d]*:|function|return|if|else|switch|case|while|for|do|break|continue|var|try|catch|finally|throw|with|debugger|default|this|true|false|null|undefined|typeof|instanceof|in|delete|new|void|arguments|decodeURI|decodeURIComponent|encodeURI|encodeURIComponent|escape|eval|isFinite|isNaN|parseFloat|parseInt|unescape|window|document|'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"/g, "").
 					match(/([a-z_$][a-z_$\d]*)/gi) || [];
 		var result = [], resultSet = {};
 		for(var i = 0, n = vars.length; i < n; ++i){
