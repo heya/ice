@@ -1,15 +1,18 @@
 {
   "name": "heya-ice",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "ICE: logging, debugging, and assert facility.",
   "main": "main.js",
   "directories": {
     "test": "tests"
   },
   "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "heya-globalize": "^1.0.2"
+  },
   "scripts": {
-    "test": "node tests/test_sink_short.js"
+    "test": "node tests/test_sink_short.js",
+    "dist": "node node_modules/heya-globalize/index.js"
   },
   "repository": {
     "type": "git",
@@ -24,8 +27,11 @@
     "log"
   ],
   "author": "Eugene Lazutkin <eugene.lazutkin@gmail.com> (http://lazutkin.com/)",
-  "license": "BSD",
+  "license": "BSD-3-Clause",
   "volo": {
     "type": "directory"
+  },
+  "browserGlobals": {
+    "!root": "heya.ice"
   }
 }
